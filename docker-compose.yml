@@ -1,0 +1,35 @@
+version: '3'
+
+networks:
+  selenium-net:
+    driver: bridge
+
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - selenium
+    networks:
+      - selenium-net
+    environment:
+      - "WD_URL=http://selenium:4444/wd/hub"
+      - WD_PLATFORM=linux
+      - WD_BROWSER=chrome
+      - WD_BROWSER_VERSION=78
+      - "GMAIL_USERNAME=" # Required, enter your credentials
+      - "GMAIL_PASSWORD=" # Required, enter your credentials
+      # - "GMAIL_MESSAGE_TO="# Optional
+      #- "GMAIL_MESSAGE_SUBJECT=" # Optional
+      #- "GMAIL_MESSAGE_BODY=" # Optional
+
+  selenium:
+    image: selenium/standalone-chrome:latest
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-net
+    environment:
+      - NODE_PORT=4444
+
